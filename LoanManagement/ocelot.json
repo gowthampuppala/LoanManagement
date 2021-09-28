@@ -1,0 +1,16 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/api/Collateral",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "25168"
+        }
+      ],
+      "UpstreamPathTemplate": "/saveCollaterals",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    }
+  ]
+}
