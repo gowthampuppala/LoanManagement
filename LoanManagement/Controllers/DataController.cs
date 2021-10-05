@@ -1,4 +1,5 @@
 ﻿using LoanManagement.Models.Entities;
+using LoanManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Graph;
 using System;
@@ -15,96 +16,70 @@ namespace LoanManagement.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class DataController : ControllerBase
-    { 
+    {
+
+
+        private readonly ILoansManagement _LMService;
+
+        static readonly log4net.ILog _log4net = log4net.LogManager.GetLogger(typeof(DataController));
+
+        public DataController(ILoansManagement LoanService)
+        {
+            _LMService = LoanService;
+        }
+
+
+
+        ///<summary>
+        /// Get all details of customer loan
+        /// </summary>
+        /// <return>
+        /// Returns list of Customers_loan
+        /// </return>
+        /// <remarks>
+        /// Sample request
+        /// GET /api/Data
+        /// </remarks>
+        /// <response code="200">Returns Customers_loan</response>
         // GET: api/<DataController>
         [HttpGet]
-        public IEnumerable<Customer_Loan> Get()
+       
+        public  ActionResult<List<Customer_Loan>> Get()
         {
-            //CRUD
-            using (var _context = new CustomerDbContext())
-            {
-                return _context.Customer_Loans.ToList();
-
-            }
+            
+            _log4net.Info("Get All initiated!");
+            List<Customer_Loan> customer_Loans = _LMService.Get();
+            _log4net.Info("Returned List of customer loans");
+            return (customer_Loans);
         }
+
+        ///<summary>
+        /// Get all details of customer loan by ID
+        /// </summary>
+        /// <return>
+        /// Returns a Customer object by id
+        /// </return>
+        /// <remarks>
+        /// Sample request
+        /// GET /api/Data/{id}
+        /// </remarks>
+        /// <response code="200">Returns Customer by ID</response>
         // GET api/<DataController>/5
         [HttpGet("{id}")]
-        public Customer_Loan Get(int id)
+        public ActionResult<Customer_Loan> getLoanDetails(int id)
         {
-            using (var _context = new CustomerDbContext())
+            Customer_Loan custloan = _LMService.getLoanDetails(id);
+
+            if (custloan != null)
             {
-                 return _context.Customer_Loans.Where(x=>x.Id==id).SingleOrDefault();
+                _log4net.Info("Retunrning the Customer Loan By Id");
+                return custloan;
             }
-        
-        }
-
-        // POST api/<DataController>
-        [HttpPost]
-        public IActionResult Post([FromBody] Customer r)
-        {
-            try
+            else 
             {
-            using (var _context = new CustomerDbContext())
-            {
-                    _context.Customers.Add(r);
-                    _context.SaveChanges(); 
+                _log4net.Info("No Customer Loan Found");
+                return NotFound();
             }
-
-            }
-            catch (Exception)
-            {
-
-                return StatusCode(500, "An error occured");
-            }
-            using (var _context = new CustomerDbContext())
-            {
-                var custs = _context.Customers.ToList();
-                return Ok(custs);
-            }
-
-        }
-
-
-
-
-        [HttpPost]
-        public IActionResult PostintoLoan([FromBody] Customer_Loan r)
-        {
-            try
-            {
-                using (var _context = new CustomerDbContext())
-                {
-                    _context.Customer_Loans.Add(r);
-                    _context.SaveChanges();
-                }
-
-            }
-            catch (Exception)
-            {
-
-                return StatusCode(500, "An error occured");
-            }
-            using (var _context = new CustomerDbContext())
-            {
-                var custs = _context.Customer_Loans.ToList();
-                return Ok(custs);
-            }
-        }
-
-
-
-
-
-        // PUT api/<DataController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<DataController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

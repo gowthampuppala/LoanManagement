@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LoanManagement</name>
+    </assembly>
+    <members>
+        <member name="M:LoanManagement.Controllers.DataController.Get">
+            <summary>
+             Get all details of customer loan
+             </summary>
+             <return>
+             Returns list of Customers_loan
+             </return>
+             <remarks>
+             Sample request
+             GET /api/Data
+             </remarks>
+             <response code="200">Returns Customers_loan</response>
+        </member>
+        <member name="M:LoanManagement.Controllers.DataController.getLoanDetails(System.Int32)">
+            <summary>
+             Get all details of customer loan by ID
+             </summary>
+             <return>
+             Returns a Customer object by id
+             </return>
+             <remarks>
+             Sample request
+             GET /api/Data/{id}
+             </remarks>
+             <response code="200">Returns Customer by ID</response>
+        </member>
+    </members>
+</doc>
